@@ -46,14 +46,14 @@
 </head>
 <body>
   <div class="container">
-    <h2>🔗 Dynamic Graph Connectivity Checker</h2>
+    <h2> Dynamic Graph Connectivity Checker</h2>
 
-    <h3>📘 Problem Statement:</h3>
+    <h3>Problem Statement:</h3>
     <p>
       In many real-world systems such as social networks and transport networks, graphs evolve dynamically. This tool helps simulate a dynamic graph where edges can be added over time, and connectivity between nodes can be checked instantly using Disjoint Set Union (Union-Find).
     </p>
 
-    <h3>📝 Instructions:</h3>
+    <h3> Instructions:</h3>
     <ul>
       <li><strong>Number of Nodes</strong>: Enter total nodes (e.g., <code>6</code>)</li>
       <li><strong>Add Edge</strong>: Enter a pair of nodes like <code>0,1</code> and click <code>Add Edge</code></li>
@@ -74,7 +74,7 @@
     <input type="text" id="checkInput" placeholder="e.g., 0,2">
     <button onclick="checkConnectivity()">Check Connectivity</button>
 
-    <h3>💡 Output:</h3>
+    <h3>Output:</h3>
     <pre id="output"></pre>
   </div>
 
@@ -111,12 +111,12 @@
     function initGraph() {
       const n = parseInt(document.getElementById("nodeCount").value);
       if (isNaN(n) || n <= 0) {
-        document.getElementById("output").textContent = "❗ Please enter a valid number of nodes.";
+        document.getElementById("output").textContent = "Please enter a valid number of nodes.";
         return;
       }
       dsu = new DSU(n);
       edges = new Set();
-      document.getElementById("output").textContent = `✅ Graph initialized with ${n} nodes.`;
+      document.getElementById("output").textContent = `Graph initialized with ${n} nodes.`;
     }
 
     function addEdge() {
@@ -129,22 +129,22 @@
       if (!edges.has(key)) {
         dsu.union(u, v);
         edges.add(key);
-        document.getElementById("output").textContent = `✅ Edge added: ${u} -- ${v}`;
+        document.getElementById("output").textContent = `Edge added: ${u} -- ${v}`;
       } else {
-        document.getElementById("output").textContent = `ℹ️ Edge ${u} -- ${v} already exists.`;
+        document.getElementById("output").textContent = `Edge ${u} -- ${v} already exists.`;
       }
     }
 
     function checkConnectivity() {
       const [u, v] = document.getElementById("checkInput").value.split(',').map(Number);
       if (isNaN(u) || isNaN(v)) {
-        document.getElementById("output").textContent = "❗ Invalid connectivity check input.";
+        document.getElementById("output").textContent = " Invalid connectivity check input.";
         return;
       }
       const connected = dsu.find(u) === dsu.find(v);
       document.getElementById("output").textContent = connected
-        ? `🔗 Nodes ${u} and ${v} are CONNECTED`
-        : `🚫 Nodes ${u} and ${v} are NOT connected`;
+        ? `Nodes ${u} and ${v} are CONNECTED`
+        : `Nodes ${u} and ${v} are NOT connected`;
     }
   </script>
 </body>
