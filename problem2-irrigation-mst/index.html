@@ -113,7 +113,7 @@
       const edges = edgeLines.map(line => line.split(',').map(Number)).filter(e => e.length === 3);
 
       if (isNaN(n) || n <= 0 || edges.length === 0) {
-        document.getElementById("output").textContent = "❗ Please enter valid input.";
+        document.getElementById("output").textContent = "Please enter valid input.";
         return;
       }
 
@@ -129,7 +129,7 @@
         }
       }
 
-      document.getElementById("output").textContent = `✅ Selected Pipelines:\n${mst.join('\n')}\n\nTotal Cost: $${totalCost}`;
+      document.getElementById("output").textContent = `Selected Pipelines:\n${mst.join('\n')}\n\nTotal Cost: $${totalCost}`;
     }
   </script>
 </body>
