@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Optimized Farm Irrigation System (MST)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      padding: 20px;
+    }
+    .container {
+      max-width: 750px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    input, button, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1e7e34;
+    }
+    pre {
+      background: #eef;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    h2, h3, h4 {
+      color: #004225;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>💧 Optimized Farm Irrigation System (MST)</h2>
+
+    <h3>📘 Problem Statement:</h3>
+    <p>
+      You are given a farm represented as a graph where each plot is a node and available irrigation pipelines are edges with costs. The goal is to connect all plots using a subset of these pipelines such that:
+    </p>
+    <ul>
+      <li>All plots are reachable from one another</li>
+      <li>The total cost of laying the pipelines is minimized</li>
+    </ul>
+    <p>
+      This is a classic Minimum Spanning Tree (MST) problem, and it can be efficiently solved using Kruskal's Algorithm with a Disjoint Set Union (DSU).
+    </p>
+
+    <h3>📝 Instructions:</h3>
+    <ul>
+      <li><strong>Number of Plots</strong>: Enter an integer (e.g., <code>5</code>)</li>
+      <li><strong>Pipeline Edges</strong>: Enter edges as <code>u,v,cost</code> per line (e.g., <code>0,1,10</code>)</li>
+      <li>Click <strong>Build MST</strong> to compute the optimal irrigation setup</li>
+    </ul>
+
+    <label><strong>Number of Plots:</strong></label>
+    <input type="number" id="plotCount" placeholder="e.g., 5">
+
+    <label><strong>Pipeline Edges [u,v,cost] (one per line):</strong></label>
+    <textarea id="edgesInput" rows="6" placeholder="0,1,10\n0,2,6\n0,3,5\n1,3,15\n2,3,4"></textarea>
+
+    <button onclick="buildMST()">Build MST</button>
+
+    <h3>💡 Output:</h3>
+    <pre id="output"></pre>
+  </div>
+
+  <script>
+    class DSU {
+      constructor(n) {
+        this.parent = Array.from({ length: n }, (_, i) => i);
+        this.rank = new Array(n).fill(0);
+      }
+      find(x) {
+        if (this.parent[x] !== x) {
+          this.parent[x] = this.find(this.parent[x]);
+        }
+        return this.parent[x];
+      }
+      union(x, y) {
+        let rootX = this.find(x);
+        let rootY = this.find(y);
+        if (rootX === rootY) return false;
+        if (this.rank[rootX] < this.rank[rootY]) {
+          this.parent[rootX] = rootY;
+        } else if (this.rank[rootX] > this.rank[rootY]) {
+          this.parent[rootY] = rootX;
+        } else {
+          this.parent[rootY] = rootX;
+          this.rank[rootX]++;
+        }
+        return true;
+      }
+    }
+
+    function buildMST() {
+      const n = parseInt(document.getElementById("plotCount").value);
+      const edgeLines = document.getElementById("edgesInput").value.trim().split("\n");
+      const edges = edgeLines.map(line => line.split(',').map(Number)).filter(e => e.length === 3);
+
+      if (isNaN(n) || n <= 0 || edges.length === 0) {
+        document.getElementById("output").textContent = "❗ Please enter valid input.";
+        return;
+      }
+
+      edges.sort((a, b) => a[2] - b[2]);
+      const dsu = new DSU(n);
+      let totalCost = 0;
+      const mst = [];
+
+      for (const [u, v, cost] of edges) {
+        if (dsu.union(u, v)) {
+          mst.push(`${u} -- ${v}`);
+          totalCost += cost;
+        }
+      }
+
+      document.getElementById("output").textContent = `✅ Selected Pipelines:\n${mst.join('\n')}\n\nTotal Cost: $${totalCost}`;
+    }
+  </script>
+</body>
+</html>

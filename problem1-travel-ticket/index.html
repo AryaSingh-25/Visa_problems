@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Travel Ticket Optimizer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      padding: 20px;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    input, button, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    pre {
+      background: #eef;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    h2, h3, h4 {
+      color: #003366;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🚆 Dynamic Travel Ticket Optimizer</h2>
+
+    <h3>📘 Problem Statement:</h3>
+    <p>
+      You are planning train travel on specific days of the year. These days are known in advance and given as a strictly increasing list of integers between 1 and 365.
+      You can buy three types of passes:
+    </p>
+    <ul>
+      <li>1-day pass (costs <code>costs[0]</code>)</li>
+      <li>7-day pass (costs <code>costs[1]</code>)</li>
+      <li>30-day pass (costs <code>costs[2]</code>)</li>
+    </ul>
+    <p>
+      Your goal is to cover all travel days at the minimum total cost. Passes cover consecutive days starting from their purchase date. You can purchase multiple passes.
+    </p>
+
+    <h3>📝 Instructions:</h3>
+    <ul>
+      <li><strong>Travel Days</strong>: Enter a comma-separated list of travel days (e.g., <code>1,4,6,7,8,20</code>)</li>
+      <li><strong>Ticket Costs</strong>: Enter costs for the 1-day, 7-day, and 30-day passes (e.g., <code>2,7,15</code>)</li>
+      <li>Click <strong>Calculate Minimum Cost</strong> to compute the cheapest way to travel</li>
+    </ul>
+
+    <label><strong>Travel Days (comma separated):</strong></label>
+    <input type="text" id="daysInput" placeholder="e.g., 1,4,6,7,8,20">
+
+    <label><strong>Ticket Costs [1-day, 7-day, 30-day]:</strong></label>
+    <input type="text" id="costsInput" placeholder="e.g., 2,7,15">
+
+    <button onclick="calculateCost()">Calculate Minimum Cost</button>
+
+    <h3>💡 Output:</h3>
+    <pre id="output"></pre>
+  </div>
+
+  <script>
+    function calculateCost() {
+      const days = document.getElementById("daysInput").value.split(',').map(Number).filter(x => !isNaN(x));
+      const costs = document.getElementById("costsInput").value.split(',').map(Number);
+      const durations = [1, 7, 30];
+
+      const memo = new Map();
+      const travelSet = new Set(days);
+
+      function dp(day) {
+        if (day > 365) return 0;
+        if (memo.has(day)) return memo.get(day);
+
+        if (!travelSet.has(day)) {
+          const skip = dp(day + 1);
+          memo.set(day, skip);
+          return skip;
+        }
+
+        let minCost = Infinity;
+        for (let i = 0; i < 3; i++) {
+          minCost = Math.min(minCost, costs[i] + dp(day + durations[i]));
+        }
+
+        memo.set(day, minCost);
+        return minCost;
+      }
+
+      if (days.length === 0 || costs.length !== 3) {
+        document.getElementById("output").textContent = "❗ Please enter valid input data.";
+        return;
+      }
+
+      const result = dp(Math.min(...days));
+      document.getElementById("output").textContent = `✅ Minimum total travel cost: $${result}`;
+    }
+  </script>
+</body>
+</html>
